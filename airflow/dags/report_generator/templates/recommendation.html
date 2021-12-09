@@ -1,0 +1,167 @@
+<html>
+<head>
+  <title>Find Your Place in Chicago - Recommendation</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+
+  <style>
+    body {
+      font-family: sans;
+      display: grid;
+      min-height: 100vh;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto 1fr 1fr;
+      grid-template-areas:
+        "header1 header2"
+        "main-nav content";
+      column-gap: 1rem;
+      row-gap: 1rem;
+	  
+    }
+    h1 {
+      grid-area: header1;
+    }
+    h2 {
+      grid-area: header2;
+    }
+    #gro_map {
+      grid-area: map;
+      height: 100%;
+    }
+    #densitylist {
+      grid-area: list;
+    }
+    #sexchart {
+      grid-area: chart1;
+    }
+    #racechart {
+      grid-area: chart2;
+    }
+    #mainNav {
+      grid-area: main-nav;
+      height: 100%;
+      overflow-y: scroll;
+    }
+    #content {
+      grid-area: content;
+      overflow-y: scroll;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Chicago Neighborhood Report</h1>
+  <nav id="mainNav">
+    <ul>
+      <li><a href="index2.html">All Neighborhoods in Chicago</a></li>
+	  <ul>
+		{% for pri_neigh in neighborhood_list %}
+		  <li><a href="{{ pri_neigh.neighborhood_name }}.html">{{ pri_neigh.neighborhood_name }}</a></li>
+		{% endfor %}
+	  </ul>
+    </ul>
+  </nav>
+
+   <section id="content">
+    <h1>Find Your Place in Chicago</h1>
+
+    <p>
+      <strong>Here we will give you some recommendations on how to choose a neighborhood to live in Chicago.</strong>
+    </p>
+    <p>
+      {% for i in nhoods_index %}
+		    <li>{{ i.pri_neigh }}'s index is {{ i.index }}</li>
+		  {% endfor %}
+    </p>
+    <p>
+      Paragraph 2.  
+    </p>
+    
+    <div id="overviewMap"></div>
+  </section>
+
+
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"
+   integrity="sha512-FHsFVKQ/T1KWJDGSbrUhTJyS1ph3eRrxI228ND0EGaEp6v4a/vGwPWd3Dtd/+9cI7ccofZvl/wulICEurHN1pg=="
+   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <script>
+    /*
+
+        MAP OF POP. DENSITY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    */
+    var initialCenter = [41.854, -87.673];  // <-- Latitude, Longitude
+    var initialZoom = 11;
+
+
+    var baseLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}', {
+    	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    	subdomains: 'abcd',
+    	minZoom: 0,
+    	maxZoom: 20,
+    	ext: 'png'
+    });
+
+    var neigh_mapdata = {{ neigh_mapdata }};
+    var neighLayer = L.geoJSON(neigh_mapdata, {
+      style: (feature) => {
+        return {
+          fillColor: 'pink',
+          weight: 1,
+          color: 'black',
+          fillOpacity: 0.9
+        }
+      }
+    });
+
+
+    var gro_mapdata = {{ gro_mapdata }};
+    var dataLayer = L.geoJSON(gro_mapdata, {
+      style: (feature) => {
+        return {
+          fillColor: 'black',
+          weight: 1,
+          color: 'black',
+          fillOpacity: 0.9
+        }
+      }
+    }).bindPopup(function (layer) {
+        return L.Util.template('{store_name}', layer.feature.properties);
+      });
+	
+    var gro_map = L.map('gro_map', {
+      zoomSnap: 0,
+      zoomDelta: 0.25,
+	  layers: [baseLayer, dataLayer]
+    }).setView(initialCenter, initialZoom);  
+	
+    var baseMaps = {
+          "Stamen": baseLayer
+      };
+      
+      var overlayMaps = {
+          "Groceries": dataLayer,
+          "Neighborhood": neighLayer
+      };
+    
+    L.control.layers(baseMaps, overlayMaps).addTo(gro_map);
+    
+    var s = document.querySelect('#neighborhoodSelect');
+    s.addEventListener('change', evt => {
+      var boundingBox = JSON.parse(evt.target.value);
+      gro_map.fitBounds(boundingBox)
+    });
+
+  </script>
+</body>
+</html>
+
+

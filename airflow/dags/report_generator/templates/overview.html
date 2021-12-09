@@ -1,0 +1,291 @@
+<html>
+<head>
+    <title>Find Your Place in Chicago - Overview</title>
+  
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+     crossorigin=""/>
+  
+    <style>
+      body {
+        font-family: sans;
+        display: grid;
+        min-height: 100vh;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto 1fr 1fr;
+        grid-template-areas:
+          "header1 header2"
+          "map main-nav"
+          "map content";
+        column-gap: 1rem;
+        row-gap: 1rem;
+      
+      }
+      h1 {
+        grid-area: header1;
+      }
+      h2 {
+        grid-area: header2;
+      }
+      #gro_map {
+        grid-area: map;
+        height: 100%;
+      }
+      #densitylist {
+        grid-area: list;
+      }
+      #sexchart {
+        grid-area: chart1;
+      }
+      #racechart {
+        grid-area: chart2;
+      }
+      #mainNav {
+        grid-area: main-nav;
+        max-height: 30vh;
+        overflow-y: scroll;
+      }
+      #content {
+        grid-area: content;
+        overflow-y: scroll;
+      }
+    </style>
+</head>
+
+<body>
+  <h1>Chicago Neighborhood Report</h1>
+  <nav id="mainNav">
+    <select id="neighborhoodSelect">
+      <option value="/">Select Neighborhood</option>
+      {% for pri_neigh in boundingbox %}
+        <option value="[[{{ pri_neigh.y_max }},{{ pri_neigh.x_min }}],[{{ pri_neigh.y_min }},
+        {{ pri_neigh.x_max }}]]">{{ pri_neigh.pri_neigh }}</option>
+      {% endfor %}
+    </select>
+
+    <ul>
+      <li><a href="overview.html">All Neighborhoods in Chicago</a></li>
+	  <ul>
+		{% for pri_neigh in neighborhood_list %}
+		  <li><a href="neighborhood/{{ pri_neigh.neighborhood_name }}.html">{{ pri_neigh.neighborhood_name }}</a></li>
+		{% endfor %}
+	  </ul>
+    </ul>
+  </nav>
+
+  <ul>
+    <h2><a href="recommendation.html">See Our Recommendations here!</a></h2>
+	</ul>
+
+  <section id="content">
+    <h1>Find Your Place in Chicago</h1>
+
+    <p>
+      <strong>Here we will give you some recommendations on how to choose a neighborhood to live in Chicago.</strong>
+    </p>
+    <p>
+      <strong> - Safety First: </strong>
+    </p>
+    <p>
+      In recent 30 days, there are {{ total_crime.total_num }} crime cases occurred in Chicago. 
+      <strong>{{ max_crime.pri_neigh }} neighborhood</strong> has the most crime cases, and the total crime case number is {{ max_crime.num_crime }}. We define {{ max_crime.pri_neigh }} as the most dangerous neighborhood in Chicago, so we do not recommend to live there. 
+      <strong>{{ min_crime.pri_neigh }} neighborhood</strong> has the least crime cases, and the total crime case number is {{ min_crime.num_crime }}. We define {{ min_crime.pri_neigh }} as the safest neighborhood in Chicago, and we'd recommend to live there.
+    </p>
+    <p>
+      <strong> - Public Transportation: </strong>
+    </p>
+
+    <p>
+      There are {{ total_busstop.total_busstop }} bus stops in City of Chicago. 
+      {{ max_busstop.pri_neigh }} neighborhood shares the most bus stops, with a value of {{ max_busstop.num_busstop }} . 
+      {{ min_busstop.pri_neigh }} neighborhood has the least bus stops, with a value of {{ min_busstop.num_busstop }} . 
+      On average, each neighborhood has {{ average_busstop.mean_busstop }} bus stops. 
+      Chicago is a city linked by lines and webs of public transit and is easy to travel around by public transit.
+
+    </p>
+
+    <p>
+      <strong> - Restaurants and Groceries: </strong>
+    </p>
+    <p>
+      {{ max_res.pri_neigh }} neighborhood has the most restaurants, with a value of {{ max_res.num_res }} . 
+      {{ min_res.pri_neigh }} neighborhood has the least restaurants, with a value of {{ min_res.num_res }} . 
+      On average, each neighborhood has {{ average_res.mean_res }} restaurants.     
+      Chicago is a paradise for food lovers.
+    </p>
+    <p>
+      {{ max_gro.pri_neigh }} neighborhood has the most grocery stores, with a value of {{ max_gro.num_gro }} . 
+      {{ min_gro.pri_neigh }} neighborhood has the least grocery stores, with a value of {{ min_gro.num_gro }} . 
+      On average, each neighborhood has {{ average_gro.mean_gro }} grocery stores. 
+    </p>
+    <div id="overviewMap"></div>
+  </section>
+
+
+  <div id="gro_map"></div>
+
+  <div id="densitylist"></div>
+
+  <div id="sexchart"></div>
+
+  <div id="racechart"></div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"
+   integrity="sha512-FHsFVKQ/T1KWJDGSbrUhTJyS1ph3eRrxI228ND0EGaEp6v4a/vGwPWd3Dtd/+9cI7ccofZvl/wulICEurHN1pg=="
+   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <script>
+    /*
+
+        MAP OF POP. DENSITY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    */
+    var initialCenter = [41.854, -87.673];  // <-- Latitude, Longitude
+    var initialZoom = 11;
+
+
+    var baseLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}', {
+    	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    	subdomains: 'abcd',
+    	minZoom: 0,
+    	maxZoom: 20,
+    	ext: 'png'
+    });
+    
+
+    function getStyle(feature) {
+      var scaledValue = feature.properties['risk'] / 5;
+      var interpolator = d3.interpolate('#e5f5f9', '#2ca25f')
+      var featureColor = interpolator(scaledValue);
+
+      return {
+        color: featureColor,
+        weight: 1,
+        fillColor: featureColor,
+        fillOpacity: 0.6
+      };
+    }
+
+    function getStyle1(feature) {
+      var scaledValue = feature.properties['summary'] / 5;
+      var interpolator = d3.interpolate('#e5f5f9', '#2ca25f')
+      var featureColor = interpolator(scaledValue);
+
+      return {
+        color: featureColor,
+        weight: 1,
+        fillColor: featureColor,
+        fillOpacity: 0.6
+      };
+    }
+
+    function CrimeTooltip(layer) {
+      var density = layer.feature.properties['number'];
+      var name = layer.feature.properties['pri_neigh'];
+      return `${density} crimes in the in the ${name} last month.`;
+    }
+
+    function GroTooltip(layer) {
+      var density = layer.feature.properties['number'];
+      var name = layer.feature.properties['pri_neigh'];
+      return `${density} groceries in the ${name}.`;
+    }
+
+    function BusTooltip(layer) {
+      var density = layer.feature.properties['number'];
+      return `${density} bus stops in the ${name}.`;
+    }
+
+    function ResTooltip(layer) {
+      var density = layer.feature.properties['number'];
+      return `${density} restaurants in the ${name}.`;
+    }
+
+    var crime_risk_mapdata = {{ crime_risk_mapdata }};
+    var CrimeLayer = L.geoJSON(crime_risk_mapdata, {
+        style: getStyle
+    });
+    CrimeLayer.bindTooltip(CrimeTooltip)
+
+    var gro_level_mapdata = {{ gro_level_mapdata }};
+    var GroLayer = L.geoJSON(gro_level_mapdata, {
+        style: getStyle1
+    });
+    GroLayer.bindTooltip(GroTooltip)
+
+    var bus_stop_level_mapdata = {{ bus_stop_level_mapdata }};
+    var BusLayer = L.geoJSON(bus_stop_level_mapdata, {
+        style: getStyle1
+    });
+    BusLayer.bindTooltip(BusTooltip)
+
+    var res_level_mapdata = {{ res_level_mapdata }};
+    var ResLayer = L.geoJSON(res_level_mapdata, {
+        style: getStyle1
+    });
+    ResLayer.bindTooltip(ResTooltip)
+
+    /*
+    var neigh_mapdata = {{ neigh_mapdata }};
+    var neighLayer = L.geoJSON(neigh_mapdata, {
+      style: (feature) => {
+        return {
+          fillColor: 'pink',
+          weight: 1,
+          color: 'black',
+          fillOpacity: 0.9
+        }
+      }
+    });
+    */
+   
+    /*
+    var gro_mapdata = {{ gro_mapdata }};
+    var dataLayer = L.geoJSON(gro_mapdata, {
+      style: (feature) => {
+        return {
+          fillColor: 'black',
+          weight: 1,
+          color: 'black',
+          fillOpacity: 0.9
+        }
+      }
+    }).bindPopup(function (layer) {
+        return L.Util.template('{store_name}', layer.feature.properties);
+      });
+	  */
+
+    var gro_map = L.map('gro_map', {
+      zoomSnap: 0,
+      zoomDelta: 0.25,
+	  layers: [baseLayer, CrimeLayer]
+    }).setView(initialCenter, initialZoom);  
+	
+    var baseMaps = {
+          "Stamen": baseLayer
+      };
+      
+      var overlayMaps = {
+          "Groceries": GroLayer,
+          "Crimes": CrimeLayer,
+          "Restaurants": ResLayer,
+          "Bus stops": BusLayer
+      };
+    
+    L.control.layers(baseMaps, overlayMaps).addTo(gro_map);
+    
+    var s = document.querySelect('#neighborhoodSelect');
+    s.addEventListener('change', evt => {
+      var boundingBox = JSON.parse(evt.target.value);
+      gro_map.fitBounds(boundingBox)
+    });
+
+  </script>
+</body>
+</html>
+
+
