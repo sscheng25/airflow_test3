@@ -274,7 +274,10 @@ def write_neighborhood(neighborhood, template, output_root,
     # with open(output_root / 'neighborhood'/ f'{neighborhood.neighborhood_name}.html', 'w') as local_file:
     #     local_file.write(output)
     
-    with open(output_root / 'neighborhood' / f'{neighborhood.neighborhood_name}.html', 'w') as local_file:
+    neighborhood_root = output_root / 'neighborhood' 
+    neighborhood_root.mkdir(parents=True, exist_ok=True)
+
+    with open(neighborhood_root / f'{neighborhood.neighborhood_name}.html', 'w') as local_file:
          local_file.write(output)
          local_file_to_gcs(
             local_file_name=local_file.name,
