@@ -125,7 +125,7 @@ def run_transform_gbq(dataset_name, table_name, sql_root):
 
     print(f'Creating or replacing table `{dataset_name}.{table_name}`...')
     query_job = client.query(f'CREATE OR REPLACE TABLE `{dataset_name}.{table_name}` AS ({query})')
-    return query_job.result()
+    query_job.result()
 
 
 def local_file_to_gcs(local_file_name, gcs_bucket_name, gcs_blob_name, content_type=None):
