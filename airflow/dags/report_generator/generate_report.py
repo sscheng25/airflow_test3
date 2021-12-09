@@ -13,6 +13,7 @@ from pipeline_tools import local_file_to_gcs
 
 template_root = Path(__file__).parent / 'templates'
 output_root = Path(__file__).parent.parent / 'output'
+output_root.mkdir(parents=True, exist_ok=True)
 
 def main():
 
