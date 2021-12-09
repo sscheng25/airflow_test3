@@ -99,7 +99,7 @@ with DAG(dag_id='data_pipeline',
     transform_justtest_bus_stop_level_counts_task = PythonOperator(
         task_id='transform_justtest_bus_stop_level',
         python_callable=run_transform_gbq,
-        op_args=['justtest', 'bus_stop_level_counts', sql_dir],
+        op_args=['justtest', 'bus_stop_level', sql_dir],
     )
     transform_justtest_centroid_task = PythonOperator(
         task_id='transform_justtest_centroid',
