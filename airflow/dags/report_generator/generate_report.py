@@ -2,7 +2,7 @@
 # Setting environment variable. NOTE: This is not a production-safe practice.
 # This is only acceptable because this is a lab.
 import os
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/tushimin/Desktop/musa-509-final-27b36afe08d2.json'
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/tushimin/Desktop/musa-509-final-27b36afe08d2.json'
 #####
 import geopandas as gpd
 import pandas as pd
