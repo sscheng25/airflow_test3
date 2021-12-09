@@ -21,7 +21,7 @@ from sodapy import Socrata
 def main():
     print('Downloading bus stop data...')
 
-    client = Socrata("data.cityofchicago.org", None)
+    client = Socrata("data.cityofchicago.org", "bt7YFTw0UIlnWu0u0vmTbfbkA")
     results = client.get("qs84-j7wh", limit=12000)
 
     # pd.set_option('display.max_columns', None)

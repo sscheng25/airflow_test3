@@ -21,7 +21,7 @@ from sodapy import Socrata
 def main():
     print('Downloading grocery data...')
 
-    client = Socrata("data.cityofchicago.org", None)
+    client = Socrata("data.cityofchicago.org", "bt7YFTw0UIlnWu0u0vmTbfbkA")
     results = client.get("53t8-wyrc", limit=1000)
 
     # pd.set_option('display.max_columns', None)

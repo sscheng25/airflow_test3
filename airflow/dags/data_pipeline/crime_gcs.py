@@ -20,7 +20,7 @@ from sodapy import Socrata
 def main():
     print('Downloading crime data...')
 
-    client = Socrata("data.cityofchicago.org", None)
+    client = Socrata("data.cityofchicago.org", "bt7YFTw0UIlnWu0u0vmTbfbkA")
     results = client.get("ijzp-q8t2", limit=20000)
 
     # pd.set_option('display.max_columns', None)
