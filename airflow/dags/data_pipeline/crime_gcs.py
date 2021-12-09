@@ -17,73 +17,74 @@ import json
 import pandas as pd
 from sodapy import Socrata
 
-print('Downloading crime data...')
+def main():
+    print('Downloading crime data...')
 
-client = Socrata("data.cityofchicago.org", None)
-results = client.get("ijzp-q8t2", limit=20000)
+    client = Socrata("data.cityofchicago.org", None)
+    results = client.get("ijzp-q8t2", limit=20000)
 
-# pd.set_option('display.max_columns', None)
-results_df = pd.DataFrame.from_records(results)
-# results_df.head()
+    # pd.set_option('display.max_columns', None)
+    results_df = pd.DataFrame.from_records(results)
+    # results_df.head()
 
-results = pd.DataFrame(results, columns=[
-    'id', 'case_number', 'date', 'primary_type',
-    'description', 'district', 'year', 'latitude', 
-    'longitude'])
-results.to_csv(f'crime_{dt.date.today()}.csv', index=False)
+    results = pd.DataFrame(results, columns=[
+        'id', 'case_number', 'date', 'primary_type',
+        'description', 'district', 'year', 'latitude', 
+        'longitude'])
+    results.to_csv(f'crime_{dt.date.today()}.csv', index=False)
 
-# Upload local file of data to Google Cloud Storage
-print('Uploading crime data to GCS...')
-bucket_name = os.environ['PIPELINE_DATA_BUCKET']  # <-- retrieve the bucket name from the environment
-blob_name = f'crime_{dt.date.today()}.csv'
-outfile_path1 = f'crime_{dt.date.today()}.csv'
+    # Upload local file of data to Google Cloud Storage
+    print('Uploading crime data to GCS...')
+    bucket_name = os.environ['PIPELINE_DATA_BUCKET']  # <-- retrieve the bucket name from the environment
+    blob_name = f'crime_{dt.date.today()}.csv'
+    outfile_path1 = f'crime_{dt.date.today()}.csv'
 
-storage_robot = storage.Client()
-bucket = storage_robot.bucket(bucket_name)
-blob = bucket.blob(blob_name)
-blob.upload_from_filename(outfile_path1)
+    storage_robot = storage.Client()
+    bucket = storage_robot.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    blob.upload_from_filename(outfile_path1)
 
-print('Done.')
+    print('Done.')
 
-"""
-from dotenv import load_dotenv
-load_dotenv()
+    """
+    from dotenv import load_dotenv
+    load_dotenv()
 
-# Import additional required packages
-import datetime as dt
-import os
-import requests
-from google.cloud import storage
-import json
-import pandas as pd
+    # Import additional required packages
+    import datetime as dt
+    import os
+    import requests
+    from google.cloud import storage
+    import json
+    import pandas as pd
 
-# Retrieve data from URL
-print('Downloading crime data...')
-response = requests.get('https://data.cityofchicago.org/resource/ijzp-q8t2.json')
+    # Retrieve data from URL
+    print('Downloading crime data...')
+    response = requests.get('https://data.cityofchicago.org/resource/ijzp-q8t2.json')
 
-# Save retrieved data to a local file
-print('Saving crime data to a file...')
+    # Save retrieved data to a local file
+    print('Saving crime data to a file...')
 
-outfile_path = f'crime_{dt.date.today()}.json'
-with open(outfile_path, mode='wb') as outfile:
-    outfile.write(response.content)
+    outfile_path = f'crime_{dt.date.today()}.json'
+    with open(outfile_path, mode='wb') as outfile:
+        outfile.write(response.content)
 
 
-outfile_path1 = f'crime_{dt.date.today()}.csv'
-with open(outfile_path, "r") as read_file:
-    data = pd.DataFrame(json.load(read_file))
-    print(type(data))
-    data.to_csv (outfile_path1, index = None)
+    outfile_path1 = f'crime_{dt.date.today()}.csv'
+    with open(outfile_path, "r") as read_file:
+        data = pd.DataFrame(json.load(read_file))
+        print(type(data))
+        data.to_csv (outfile_path1, index = None)
 
-# Upload local file of data to Google Cloud Storage
-print('Uploading crime data to GCS...')
-bucket_name = os.environ['PIPELINE_DATA_BUCKET']  # <-- retrieve the bucket name from the environment
-blob_name = f'crime_{dt.date.today()}.csv'
+    # Upload local file of data to Google Cloud Storage
+    print('Uploading crime data to GCS...')
+    bucket_name = os.environ['PIPELINE_DATA_BUCKET']  # <-- retrieve the bucket name from the environment
+    blob_name = f'crime_{dt.date.today()}.csv'
 
-storage_robot = storage.Client()
-bucket = storage_robot.bucket(bucket_name)
-blob = bucket.blob(blob_name)
-blob.upload_from_filename(outfile_path1)
+    storage_robot = storage.Client()
+    bucket = storage_robot.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    blob.upload_from_filename(outfile_path1)
 
-print('Done.')
-"""
+    print('Done.')
+    """

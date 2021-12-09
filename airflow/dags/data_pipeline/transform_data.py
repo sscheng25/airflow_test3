@@ -8,6 +8,7 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/tushimin/Desktop/musa-509
 from pathlib import Path
 from pipeline_tools import run_transform_gbq
 
+
 sql_root = Path(__file__).parent / 'sql'
 
 def main():
