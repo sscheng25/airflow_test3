@@ -20,22 +20,23 @@ We choose indicators from three dimensions, respectively safety, transportation,
 
  -   **[Crime data 30 days prior to present](https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-Present/ijzp-q8t2)** 
        
-       Crime data is of an important part in evaluating the neighborhoods in Chicago. As a city of high crime rate, residents and visitors never stop trying to seek a safer place to live. In this project, we fetch crime data 30 days prior to present to make our analysis. We dive into crime spatial distribution and crime type composition. On average, there are about 36,000 crime cases of all types every month in Chicago. 
-       We get the crime data via Socrata Open Data API frome [Chicago Data Portal](https://data.cityofchicago.org/), and the crime data is updated regularly, approximately every one or two days. So we can easily catch the latest crime trend in Chicago.
+       Crime data is of an important part in evaluating the neighborhoods in Chicago. As a city of high crime rate, residents and visitors never spare efforts in seeking a safer place to live. In this project, we fetch crime data 30 days prior to present to make our analysis. We dive into crime spatial distribution and crime type composition. On average, there are about 36,000 crime cases of all types every month in Chicago. 
+      
+      We get the crime data via **Socrata Open Data API** frome **[Chicago Data Portal](https://data.cityofchicago.org/)**, and the crime data is updated regularly, approximately every one or two days. So we can easily catch the latest crime trend in Chicago.
 
- - 	 **[Public transit stations](https://data.cityofchicago.org/Transportation/CTA-Bus-Stops/hvnx-qtky)** -- Chicago data portal
+ - 	 **[Public transit stations](https://data.cityofchicago.org/Transportation/CTA-Bus-Stops/hvnx-qtky)**
         
-       Size: 10833 rows, 14 columns)
+       Size: 10833 rows, 14 columns
 
- - 	 **[Grocery data](https://data.cityofchicago.org/Community-Economic-Development/Grocery-Stores-2013/53t8-wyrc)** -- Chicago data portal
+ - 	 **[Grocery data](https://data.cityofchicago.org/Community-Economic-Development/Grocery-Stores-2013/53t8-wyrc)**
 
-       Size: 265 rows, 6 columns.
+       Size: 265 rows, 6 columns
 
- - 	**[Restaurants data](https://data.cityofchicago.org/Health-Human-Services/Food-Inspections-Dashboard/2bnm-jnvb)** -- Chicago data portal
+ - 	**[Restaurants data](https://data.cityofchicago.org/Health-Human-Services/Food-Inspections-Dashboard/2bnm-jnvb)**
        
        Size: 228176 rows, 17 columns
 
- - 	**[Chicago neighborhood data](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Neighborhoods/bbvz-uum9)** -- Chicago data portal
+ - 	**[Chicago neighborhood data](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Neighborhoods/bbvz-uum9)**
 
        Size: 99 rows, 5 columns
 
@@ -46,6 +47,11 @@ We choose indicators from three dimensions, respectively safety, transportation,
 Normalization is process to convert values with different ranges to range (0, 1). Since our indicators have different units, we apply normalization to all of them, including crime cases, number of bus stops, number of groceries, and number of restaurants in each neighborhood.  
 
  - **Index Calculation**
+We calculate the index for evaluation neighborhoods with the following formula,
+
+** index = 0.5*(1-crime_norm) + 0.3*bus_stop_norm + 0.1*restaurant_norm + 0.1*grocery_norm**
+
+We give the coefficient according to our own experiences and users may define their weights. In our formula, the higher the index is, the more livable the neighborhood is.
 
 ## Data Pipeline
 
