@@ -72,11 +72,14 @@
     </p>
     <p>
       {% for i in nhoods_index %}
-		    <li>{{ i.pri_neigh }}'s index is {{ i.index }}</li>
+		    <li>{{ i.pri_neigh }}'s index is {{ i.index | round(4) }}</li>
 		  {% endfor %}
     </p>
     <p>
-      Paragraph 2.  
+      By evaluating the safety, convenience and well-beings, we recommend the top ten neighborhoods with the highest index for you, they are:
+      {% for i in index_order %}
+		    <li>{{ i.pri_neigh }}</li>
+		  {% endfor %}
     </p>
     
     <div id="overviewMap"></div>

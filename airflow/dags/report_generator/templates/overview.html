@@ -48,6 +48,7 @@
       #content {
         grid-area: content;
         overflow-y: scroll;
+        height: 30vh;
       }
     </style>
 </head>
@@ -99,7 +100,7 @@
       There are {{ total_busstop.total_busstop }} bus stops in City of Chicago. 
       {{ max_busstop.pri_neigh }} neighborhood shares the most bus stops, with a value of {{ max_busstop.num_busstop }} . 
       {{ min_busstop.pri_neigh }} neighborhood has the least bus stops, with a value of {{ min_busstop.num_busstop }} . 
-      On average, each neighborhood has {{ average_busstop.mean_busstop }} bus stops. 
+      On average, each neighborhood has {{ average_busstop.mean_busstop | round(0) }} bus stops. 
       Chicago is a city linked by lines and webs of public transit and is easy to travel around by public transit.
 
     </p>
@@ -110,13 +111,13 @@
     <p>
       {{ max_res.pri_neigh }} neighborhood has the most restaurants, with a value of {{ max_res.num_res }} . 
       {{ min_res.pri_neigh }} neighborhood has the least restaurants, with a value of {{ min_res.num_res }} . 
-      On average, each neighborhood has {{ average_res.mean_res }} restaurants.     
+      On average, each neighborhood has {{ average_res.mean_res | round(0) }} restaurants.     
       Chicago is a paradise for food lovers.
     </p>
     <p>
       {{ max_gro.pri_neigh }} neighborhood has the most grocery stores, with a value of {{ max_gro.num_gro }} . 
       {{ min_gro.pri_neigh }} neighborhood has the least grocery stores, with a value of {{ min_gro.num_gro }} . 
-      On average, each neighborhood has {{ average_gro.mean_gro }} grocery stores. 
+      On average, each neighborhood has {{ average_gro.mean_gro | round(0) }} grocery stores. 
     </p>
     <div id="overviewMap"></div>
   </section>
@@ -186,7 +187,7 @@
     function CrimeTooltip(layer) {
       var density = layer.feature.properties['number'];
       var name = layer.feature.properties['pri_neigh'];
-      return `${density} crimes in the in the ${name} last month.`;
+      return `${density} crimes in the ${name} last month.`;
     }
 
     function GroTooltip(layer) {
@@ -229,36 +230,6 @@
     });
     ResLayer.bindTooltip(ResTooltip)
 
-    /*
-    var neigh_mapdata = {{ neigh_mapdata }};
-    var neighLayer = L.geoJSON(neigh_mapdata, {
-      style: (feature) => {
-        return {
-          fillColor: 'pink',
-          weight: 1,
-          color: 'black',
-          fillOpacity: 0.9
-        }
-      }
-    });
-    */
-   
-    /*
-    var gro_mapdata = {{ gro_mapdata }};
-    var dataLayer = L.geoJSON(gro_mapdata, {
-      style: (feature) => {
-        return {
-          fillColor: 'black',
-          weight: 1,
-          color: 'black',
-          fillOpacity: 0.9
-        }
-      }
-    }).bindPopup(function (layer) {
-        return L.Util.template('{store_name}', layer.feature.properties);
-      });
-	  */
-
     var gro_map = L.map('gro_map', {
       zoomSnap: 0,
       zoomDelta: 0.25,
@@ -278,7 +249,7 @@
     
     L.control.layers(baseMaps, overlayMaps).addTo(gro_map);
     
-    var s = document.querySelect('#neighborhoodSelect');
+    var s = document.querySelector('#neighborhoodSelect');
     s.addEventListener('change', evt => {
       var boundingBox = JSON.parse(evt.target.value);
       gro_map.fitBounds(boundingBox)

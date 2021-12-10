@@ -40,6 +40,7 @@
     }
     #cri_chart {
       grid-area: chart1;
+      height: 400px;
     }
     #racechart {
       grid-area: chart2;
@@ -87,8 +88,7 @@
   </header>
 
     <p>
-      The information in the {{ neighborhood.neighborhood_name }} neighborhood ...
-
+    In the {{ neighborhood.neighborhood_name }} neighborhood, there are {{ nhood.num_crime}} crimes in the last 30 days, {{ nhood.num_busstop }} bus stops, {{ nhood.num_grocery }} groceries, and {{ nhood.num_restaurant }} restaurants. Numbers of each type of crimes are shown in the graph below.
     </p>
 
     <div id="overviewMap"></div>
@@ -243,19 +243,6 @@
         }
     });
     
-    
-    /*
-
-        neighborhood zoom in ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    */
-    
-  
-    var s = document.querySelect('#neighborhoodSelect');
-    s.addEventListener('change', evt => {
-      var boundingBox = JSON.parse(evt.target.value);
-      res_map.fitBounds(boundingBox)
-    });
     
     
 

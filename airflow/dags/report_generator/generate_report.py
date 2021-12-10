@@ -95,6 +95,7 @@ def main():
     average_gro = pd.read_gbq('SELECT * FROM justtest.average_gro') 
 
     nhoods_index = pd.read_gbq('SELECT * FROM justtest.nhoods_index')
+    index_order = pd.read_gbq('SELECT * FROM justtest.nhoods_index order by index DESC limit 10')
 
     # Render the data into the template.
     env = Environment(loader=FileSystemLoader(template_root))
@@ -137,7 +138,7 @@ def main():
 
     # Write recommendation
     write_recommendation(
-        nhoods_index,
+        nhoods_index,index_order,
         neigh_mapdata_gdf, neighborhood_df, nhood_df, 
         max_crime, min_crime, type_crime, total_crime, 
         max_busstop, min_busstop, average_busstop, total_busstop,
@@ -252,10 +253,13 @@ def write_neighborhood(neighborhood, template, output_root,
     df = cri_chartdata_df
     cri_chartdata_df = df[df.pri_neigh == neighborhood.neighborhood_name]
 
+    df = nhood_df
+    nhood_df = df[df.pri_neigh == neighborhood.neighborhood_name]
+
     df = centroid_df
     centroid_df = df[df.pri_neigh == neighborhood.neighborhood_name]
 
-    # Render the corridor data into a tempate
+    # Render the neighborhood data into a tempate
     output = template.render(
         # TEMPLATE DATA GOES HERE...
         neighborhood=neighborhood.to_dict(),
@@ -267,7 +271,7 @@ def write_neighborhood(neighborhood, template, output_root,
         crime_risk_mapdata = crime_risk_mapdata_gdf.to_json(),
         cri_chartdata = cri_chartdata_df.to_dict('list'),
         neighborhood_list=neighborhood_df.to_dict('records'),
-        nhood=nhood_df.to_dict(),
+        nhood=nhood_df.to_dict('records')[0],
         centroid = centroid_df.to_dict('list')
     )
 
@@ -288,7 +292,7 @@ def write_neighborhood(neighborhood, template, output_root,
 
 
 def write_recommendation(
-    nhoods_index,
+    nhoods_index,index_order,
     neigh_mapdata_gdf, neighborhood_df, nhood_df, 
     max_crime, min_crime, type_crime, total_crime,    
     max_busstop, min_busstop, average_busstop, total_busstop,
@@ -300,6 +304,7 @@ def write_recommendation(
     output = template.render(
         # TEMPLATE DATA GOES HERE...
         nhoods_index=nhoods_index.to_dict('records'),
+        index_order=index_order.to_dict('records'),
         neigh_mapdata=neigh_mapdata_gdf.to_json(),
         neighborhood_list=neighborhood_df.to_dict('records'),
         nhood=nhood_df.to_dict('records'),
