@@ -18,11 +18,10 @@ We choose indicators from three dimensions, respectively safety, transportation,
 
 ## Data sources
 
- -   **[Crime data one year prior to present](https://data.cityofchicago.org/api/views/dfnk-7re6/rows.json?accessType=DOWNLOAD)** -- Chicago data portal
+ -   **[Crime data 30 days prior to present](https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-Present/ijzp-q8t2)** 
        
-       Size: 202882 rows, 30 columns
-       
-       Update regularly.
+       Crime data is of an important part in evaluating the neighborhoods in Chicago. As a city of high crime rate, residents and visitors never stop trying to seek a safer place to live. In this project, we fetch crime data 30 days prior to present to make our analysis. We dive into crime spatial distribution and crime type composition. On average, there are about 36,000 crime cases of all types every month in Chicago. 
+       We get the crime data via Socrata Open Data API frome [Chicago Data Portal](https://data.cityofchicago.org/), and the crime data is updated regularly, approximately every one or two days. So we can easily catch the latest crime trend in Chicago.
 
  - 	 **[Public transit stations](https://data.cityofchicago.org/Transportation/CTA-Bus-Stops/hvnx-qtky)** -- Chicago data portal
         
@@ -48,4 +47,5 @@ Normalization is process to convert values with different ranges to range (0, 1)
 
  - **Index Calculation**
 
+## Data Pipeline
 
