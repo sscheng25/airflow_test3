@@ -20,9 +20,9 @@ We choose indicators from three dimensions, respectively safety, transportation,
 
  -   **[Crime data 30 days prior to present](https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-Present/ijzp-q8t2)** 
        
-       Crime data is of an important part in evaluating the neighborhoods in Chicago. As a city of high crime rate, residents and visitors never spare efforts in seeking a safer place to live. In this project, we fetch crime data 30 days prior to present to make our analysis. We dive into crime spatial distribution and crime type composition. On average, there are about 36,000 crime cases of all types every month in Chicago. 
+       Crime data is of an important part in evaluating the neighborhoods in Chicago. As a city of high crime rate, residents and visitors never spare efforts in seeking a safer place to live. In this project, because we can only get limited number of crime records, we fetch crime data 30 days prior to present to make our analysis. We dive into crime spatial distribution and crime type composition. On average, there are about 36,000 crime cases of all types every month in Chicago. It is really a pity that we can't visualize crimes over a longer period of time.
       
-      We get the crime data via **Socrata Open Data API** from **[Chicago Data Portal](https://data.cityofchicago.org/)**, and the crime data is updated regularly, approximately every one or two days. So we can easily catch the latest crime trend in Chicago.
+      We get the crime data via **Socrata Open Data API** from **[Chicago Data Portal](https://data.cityofchicago.org/)**, and the crime data is updated regularly, approximately every one or two days. So we can easily catch the latest crime trend in Chicago. Due to limited number of records we are able to get, the 
 
  - 	 **[Public transit stations](https://data.cityofchicago.org/Transportation/CTA-Bus-Stops/hvnx-qtky)**
         
@@ -44,7 +44,11 @@ We choose indicators from three dimensions, respectively safety, transportation,
 
  - 	**[Chicago neighborhood data](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Neighborhoods/bbvz-uum9)**
 
-       Unlike census tracts which are randomly divided, n
+       Unlike census tracts which are randomly divided, neighborhoods are always formated based on residents' similar socioeconomic identities. In our application, the neighborhood is the smallest unit when recommending a place to live in. The shortage is that we have ignored the difference in one neighborhood, and can't provide more specific recommendation.
+       
+       The neighborhood data comes from **[Chicago Data Portal](https://data.cityofchicago.org/)** and is obtained by **Socrata Open Data API**.
+       
+       
 
 ## Metric in evaluating neighborhoods
 
