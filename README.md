@@ -21,6 +21,8 @@ We choose indicators from three dimensions, respectively safety, transportation,
  -   **[Crime data one year prior to present](https://data.cityofchicago.org/api/views/dfnk-7re6/rows.json?accessType=DOWNLOAD)** -- Chicago data portal
        
        Size: 202882 rows, 30 columns
+       
+       Update regularly.
 
  - 	 **[Public transit stations](https://data.cityofchicago.org/Transportation/CTA-Bus-Stops/hvnx-qtky)** -- Chicago data portal
         
@@ -37,4 +39,13 @@ We choose indicators from three dimensions, respectively safety, transportation,
  - 	**[Chicago neighborhood data](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Neighborhoods/bbvz-uum9)** -- Chicago data portal
 
        Size: 99 rows, 5 columns
+
+## Metric in evaluating neighborhoods
+
+ - **Normalization**
+
+Normalization is process to convert values with different ranges to range (0, 1). Since our indicators have different units, we apply normalization to all of them, including crime cases, number of bus stops, number of groceries, and number of restaurants in each neighborhood.  
+
+ - **Index Calculation**
+
 
