@@ -47,6 +47,7 @@ We choose indicators from three dimensions, respectively safety, transportation,
 Normalization is process to convert values with different ranges to range (0, 1). Since our indicators have different units, we apply normalization to all of them, including crime cases, number of bus stops, number of groceries, and number of restaurants in each neighborhood.  
 
  - **Index Calculation**
+
 We calculate the index for evaluation neighborhoods with the following formula,
 
 ** index = 0.5*(1-crime_norm) + 0.3*bus_stop_norm + 0.1*restaurant_norm + 0.1*grocery_norm**
