@@ -44,7 +44,7 @@ We choose indicators from three dimensions, respectively safety, transportation,
 
  - 	**[Chicago neighborhood data](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Neighborhoods/bbvz-uum9)**
 
-       Size: 99 rows, 5 columns
+       Unlike census tracts which are randomly divided, n
 
 ## Metric in evaluating neighborhoods
 
