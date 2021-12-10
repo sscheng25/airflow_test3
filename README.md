@@ -22,7 +22,7 @@ We choose indicators from three dimensions, respectively safety, transportation,
        
        Crime data is of an important part in evaluating the neighborhoods in Chicago. As a city of high crime rate, residents and visitors never spare efforts in seeking a safer place to live. In this project, because we can only get limited number of crime records, we fetch crime data 30 days prior to present to make our analysis. We dive into crime spatial distribution and crime type composition. On average, there are about 36,000 crime cases of all types every month in Chicago. It is really a pity that we can't visualize crimes over a longer period of time.
       
-      We get the crime data via **Socrata Open Data API** from **[Chicago Data Portal](https://data.cityofchicago.org/)**, and the crime data is updated regularly, approximately every one or two days. So we can easily catch the latest crime trend in Chicago. Due to limited number of records we are able to get, the 
+      We get the crime data via **Socrata Open Data API** from **[Chicago Data Portal](https://data.cityofchicago.org/)**, and the crime data is updated regularly, approximately every one or two days. So we can easily catch the latest crime trend in Chicago. 
 
  - 	 **[Public transit stations](https://data.cityofchicago.org/Transportation/CTA-Bus-Stops/hvnx-qtky)**
         
