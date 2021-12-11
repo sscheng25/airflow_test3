@@ -4,8 +4,8 @@ Final Project for MUSA 509, fall 2021.
 
 ## People
 **Authors**:
-* Sisun Cheng, sisunc@upenn.edu
-* Shimin Tu, tushimin@upenn.edu
+* Sisun Cheng (sisunc@upenn.edu)
+* Shimin Tu (tushimin@upenn.edu)
 
 **Instructor**:
 * Mjumbe Poe
