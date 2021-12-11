@@ -60,7 +60,7 @@ Normalization is process to convert values with different ranges to range (0, 1)
 
 We calculate the index for evaluation neighborhoods with the following formula,
 
-**index = 0.5*(1-crime_norm) + 0.3*bus_stop_norm + 0.1*restaurant_norm + 0.1*grocery_norm*
+**index = 0.5 * (1-crime_norm) + 0.3 * bus_stop_norm + 0.1 * restaurant_norm + 0.1 * grocery_norm**
 
 We give the coefficient according to our own experiences and users may define their weights. In our formula, the higher the index is, the more livable the neighborhood is.
 
